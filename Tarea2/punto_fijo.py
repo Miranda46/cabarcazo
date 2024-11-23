@@ -18,15 +18,8 @@ def read(filename):
             functions.append(
                 {
                     "name": name,
-                    "g": lambda x: eval(
-                        expr,
-                        {
-                            "x": x,
-                            "math": math,
-                        },  # https://stackoverflow.com/questions/68397283/math-expression-to-lambda-function
-                    ),
+                    "expr": expr,
                     "p0": float(p0),
-                    "function_expression": expr,
                 }
             )
     return functions
@@ -109,7 +102,7 @@ def write(filename, results):
             # Format each field with fixed width
             f.write(
                 f"{function_name:<20}\t"
-                f"{func_data['function_expression']:<30}\t"
+                f"{func_data['expr']:<30}\t"
                 f"{func_data['p0']:>12.6f}\t"
                 f"{str(converged):>8}\t"
                 f"{velocity}\n"
@@ -148,7 +141,7 @@ if __name__ == "__main__":
     results = []
     for func in functions:
         converged, iterations = fixed_point_method(
-            func["g"], func["p0"], tol=tolerance, max_iter=max_iterations
+            func["expr"], func["p0"], tol=tolerance, max_iter=max_iterations
         )
         results.append(
             {"name": func["name"], "converged": converged, "iterations": iterations}

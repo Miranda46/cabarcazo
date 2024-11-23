@@ -1,12 +1,13 @@
 import numpy as np
+import math
 
 
-def fixed_point_method(g, p0, tol=1e-6, max_iter=100):
+def fixed_point_method(expr, p0, tol=1e-6, max_iter=100):
     """
     Implements the fixed-point iteration method to find a fixed point of the function g.
 
     Parameters:
-    - g: Function for which the fixed point is sought.
+    - expr: String expression of the function g(x)
     - p0: Initial approximation.
     - tol: Tolerance for the convergence criterion.
     - max_iter: Maximum number of iterations allowed.
@@ -21,7 +22,8 @@ def fixed_point_method(g, p0, tol=1e-6, max_iter=100):
 
     for n in range(1, max_iter + 1):
         try:
-            p_next = g(p)
+            # Evaluate the expression with the current value of p
+            p_next = eval(expr, {"x": p, "math": math})
             error = abs(p_next - p)
 
             iterations.append({"n": n, "x": p, "error": error})
@@ -29,7 +31,7 @@ def fixed_point_method(g, p0, tol=1e-6, max_iter=100):
             if error < tol:
                 return True, iterations
             p = p_next
-        except OverflowError:
+        except (OverflowError, ValueError):
             return False, iterations
 
     return False, iterations
