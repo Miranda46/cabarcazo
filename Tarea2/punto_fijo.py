@@ -5,23 +5,26 @@ from validators import (
     validate_output_file,
     validate_tolerance,
     validate_max_iterations,
+    validate_file_content,
 )
 from fixed_point_method import fixed_point_method
 import math
 
 
 def read(filename):
+    validate_file_content(filename)
     functions = []
     with open(filename, "r") as infile:
         for line in infile:
-            name, expr, p0 = line.strip().split(";")
-            functions.append(
-                {
-                    "name": name,
-                    "expr": expr,
-                    "p0": float(p0),
-                }
-            )
+            if line.strip():  # Skip empty lines
+                name, expr, p0 = line.strip().split(";")
+                functions.append(
+                    {
+                        "name": name,
+                        "expr": expr,
+                        "p0": float(p0),
+                    }
+                )
     return functions
 
 
@@ -127,29 +130,29 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # try:
-    # Validate all inputs
-    validate_input_file(args.input)
-    validate_output_file(args.output)
-    tolerance = validate_tolerance(args.tolerance)
-    max_iterations = validate_max_iterations(args.max_iterations)
+    try:
+        # Validate all inputs
+        validate_input_file(args.input)
+        validate_output_file(args.output)
+        tolerance = validate_tolerance(args.tolerance)
+        max_iterations = validate_max_iterations(args.max_iterations)
 
-    # Read functions from input file
-    functions = read(args.input)
+        # Read functions from input file
+        functions = read(args.input)
 
-    # Process each function
-    results = []
-    for func in functions:
-        converged, iterations = fixed_point_method(
-            func["expr"], func["p0"], tol=tolerance, max_iter=max_iterations
-        )
-        results.append(
-            {"name": func["name"], "converged": converged, "iterations": iterations}
-        )
+        # Process each function
+        results = []
+        for func in functions:
+            converged, iterations = fixed_point_method(
+                func["expr"], func["p0"], tol=tolerance, max_iter=max_iterations
+            )
+            results.append(
+                {"name": func["name"], "converged": converged, "iterations": iterations}
+            )
 
-    # Write results to output file
-    write(args.output, results)
+        # Write results to output file
+        write(args.output, results)
 
-    # except Exception as e:
-    #     print(f"Error: {str(e)}")
-    #     sys.exit(1)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        sys.exit(1)

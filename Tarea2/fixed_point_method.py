@@ -22,7 +22,6 @@ def fixed_point_method(expr, p0, tol=1e-6, max_iter=100):
 
     for n in range(1, max_iter + 1):
         try:
-            # Evaluate the expression with the current value of p
             p_next = eval(expr, {"x": p, "math": math})
             error = abs(p_next - p)
 
