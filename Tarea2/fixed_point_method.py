@@ -12,19 +12,24 @@ def fixed_point_method(g, p0, tol=1e-6, max_iter=100):
     - max_iter: Maximum number of iterations allowed.
 
     Returns:
-    - p: Approximation of the fixed point.
-    - None: If it does not converge within the maximum number of iterations.
+    - tuple: (converges, iterations) where:
+        - converges: Boolean indicating if the method converged
+        - iterations: List of dictionaries containing iteration data
     """
     p = p0
+    iterations = []
+
     for n in range(1, max_iter + 1):
-        p_next = g(p)
-        if abs(p_next - p) < tol:
-            print(f"Converged in {n} iterations.")
-            return p_next
-        p = p_next
-    print(f"Did not converge after {max_iter} iterations.")
-    return None
+        try:
+            p_next = g(p)
+            error = abs(p_next - p)
 
+            iterations.append({"n": n, "x": p, "error": error})
 
-def default_g(x):
-    return 0.5 * np.sqrt(10 - x**3)
+            if error < tol:
+                return True, iterations
+            p = p_next
+        except OverflowError:
+            return False, iterations
+
+    return False, iterations
