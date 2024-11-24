@@ -5,6 +5,7 @@ import math
 def fixed_point_method(expr, p0, tol=1e-6, max_iter=100):
     """
     Implements the fixed-point iteration method to find a fixed point of the function g.
+    Modified based on numerical analysis 2024-2 UNALmed course.
 
     Parameters:
     - expr: String expression of the function g(x)
