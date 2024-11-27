@@ -12,6 +12,11 @@ import math
 
 
 def read(filename):
+    """
+    Reads functions from input file. Each line should contain:
+    name;expression;initial_point
+    Returns list of dictionaries with function details
+    """
     validate_file_content(filename)
     functions = []
     with open(filename, "r") as infile:
@@ -29,6 +34,11 @@ def read(filename):
 
 
 def calculate_convergence_rate(errors):
+    """
+    Calculates the average convergence rate using the ratio of consecutive errors.
+    Rate = |e_n+1 / e_n|
+    Returns average of all rates or 0 if not enough data points.
+    """
     if len(errors) < 2:
         return 0
     # Calculate average convergence rate using consecutive errors
@@ -42,6 +52,16 @@ def calculate_convergence_rate(errors):
 
 
 def write(filename, results):
+    """
+    Writes results in two formats:
+    1. Individual .txt files for each function with detailed iterations
+    2. Summary file with convergence status and rates for all functions
+    
+    results: List of dictionaries containing:
+        - name: function name
+        - iterations: list of iteration data
+        - converged: boolean indicating convergence
+    """
     # Write individual files for each function
     for result in results:
         function_name = result["name"]
@@ -113,6 +133,7 @@ def write(filename, results):
 
 
 if __name__ == "__main__":
+    # Parse command line arguments
     parser = argparse.ArgumentParser(description="fixed_point")
     parser.add_argument(
         "-i", "--input", type=str, required=True, help="Input file (.tex)"
@@ -143,8 +164,12 @@ if __name__ == "__main__":
         # Process each function
         results = []
         for func in functions:
+            # Apply fixed point method and store results
             converged, iterations = fixed_point_method(
-                func["expr"], func["p0"], tol=tolerance, max_iter=max_iterations
+                func["expr"], 
+                func["p0"], 
+                tol=tolerance, 
+                max_iter=max_iterations
             )
             results.append(
                 {"name": func["name"], "converged": converged, "iterations": iterations}

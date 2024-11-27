@@ -32,3 +32,10 @@ python punto_fijo.py -i datos.tex -o resumen.txt -tol 0.00001 -maxiter 100
 
 ## Requirements
 - Python 3.x
+
+## Tests
+Run the tests using:
+
+```bash
+python test.py
+```

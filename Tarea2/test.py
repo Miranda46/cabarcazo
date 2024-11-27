@@ -1,6 +1,7 @@
 from fixed_point_method import fixed_point_method
 import os, sys
 from punto_fijo import read
+from validators import validate_input_file, validate_tolerance, validate_max_iterations
 import unittest
 
 class TestMethods(unittest.TestCase):
@@ -35,8 +36,54 @@ class TestMethods(unittest.TestCase):
 
     def test_input_data(self):
         dir_path = os.path.dirname(os.path.realpath(__file__)) + '/tests/prueba1.txt'
-        self.assertEqual(read(dir_path), [{'expr': 'x**2', 'name': 'func1', 'p0': 2.0}])
+        expected = [{'name': 'func1', 'expr': 'x**2', 'p0': 2.0}]  # match actual format
+        self.assertEqual(read(dir_path), expected)
 
+class TestValidators(unittest.TestCase):
+    def setUp(self):
+        # Create test files
+        with open("test.txt", "w") as f:
+            f.write("test")
+    
+    def tearDown(self):
+        # Clean up test files
+        if os.path.exists("test.txt"):
+            os.remove("test.txt")
+
+    def test_validate_input_file(self):
+        with self.assertRaises(ValueError):
+            validate_input_file("test.txt")
+        with self.assertRaises(FileNotFoundError):
+            validate_input_file("nonexistent.tex")
+    
+    def test_validate_tolerance(self):
+        self.assertEqual(validate_tolerance("0.001"), 0.001)
+        with self.assertRaises(ValueError):
+            validate_tolerance("invalid")
+        with self.assertRaises(ValueError):
+            validate_tolerance("-1.0")
+    
+    def test_validate_max_iterations(self):
+        self.assertEqual(validate_max_iterations("100"), 100)
+        with self.assertRaises(ValueError):
+            validate_max_iterations("invalid")
+        with self.assertRaises(ValueError):
+            validate_max_iterations("-10")
+
+class TestConvergenceRate(unittest.TestCase):
+    def test_calculate_convergence_rate(self):
+        from punto_fijo import calculate_convergence_rate
+        
+        # Test with empty list
+        self.assertEqual(calculate_convergence_rate([]), 0)
+        
+        # Test with one error
+        self.assertEqual(calculate_convergence_rate([0.1]), 0)
+        
+        # Test with multiple errors
+        errors = [0.1, 0.01, 0.001]
+        rate = calculate_convergence_rate(errors)
+        self.assertAlmostEqual(rate, 0.1, places=2)
 
 if __name__ == '__main__':
     unittest.main()
