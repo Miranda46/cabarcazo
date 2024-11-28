@@ -136,7 +136,7 @@ if __name__ == "__main__":
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="fixed_point")
     parser.add_argument(
-        "-i", "--input", type=str, required=True, help="Input file (.tex)"
+        "-i", "--input", type=str, required=True, help="Input file (.txt)"
     )
     parser.add_argument("-o", "--output", type=str, required=True, help="Output file")
     parser.add_argument(

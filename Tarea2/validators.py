@@ -3,8 +3,8 @@ import math
 
 
 def validate_input_file(input_file):
-    if not input_file.endswith(".tex"):
-        raise ValueError("Input file must be a .tex file")
+    if not input_file.endswith(".txt"):
+        raise ValueError("Input file must be a .txt file")
     if not os.path.exists(input_file):
         raise FileNotFoundError(f"Input file '{input_file}' not found")
 
@@ -76,5 +76,5 @@ def validate_file_content(filename):
                 eval(expr, {"x": 1, "math": math})
             except (NameError, SyntaxError, TypeError) as e:
                 raise ValueError(
-                    f"Invalid expression '{expr}' in line {line_counter}: {str(e)}"
+                    f"Input file has an invalid expression '{expr}' in line {line_counter}: {str(e)}"
                 )
