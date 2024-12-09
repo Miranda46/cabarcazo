@@ -1,7 +1,7 @@
 # Proyecto de Análisis y Visualización de Datos
 
 ## Descripción General
-Este proyecto implementa un sistema de análisis y visualización de datos que procesa datos experimentales de múltiples columnas para generar análisis de regresión, interpolación spline y gráficos de derivadas.
+Este proyecto implementa un sistema de análisis y visualización de datos que procesa datos experimentales utilizando interpolación mediante splines cúbicos naturales.
 
 ## Requisitos
 - Python 3.x
@@ -26,6 +26,16 @@ Este proyecto implementa un sistema de análisis y visualización de datos que p
 4. Calcular puntos medios de las líneas de regresión
 5. Aplicar interpolación spline cúbico
 6. Calcular la derivada de la curva de interpolación
+
+### Interpolación con Splines Cúbicos Naturales
+La implementación utiliza splines cúbicos naturales, donde:
+- Las segundas derivadas en los extremos son cero
+- Se garantiza continuidad C2 en los nodos internos
+- El algoritmo sigue el método descrito en Burden & Faires
+  1. Calcula las diferencias de x (h)
+  2. Calcula los coeficientes alpha
+  3. Resuelve el sistema tridiagonal para los coeficientes c
+  4. Calcula los coeficientes b y d
 
 ### Visualización
 - Generar gráficos individuales mostrando:

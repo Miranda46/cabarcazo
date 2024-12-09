@@ -1,51 +1,46 @@
 import numpy as np
 
-def cubic_spline(x, y, bc_type='natural'):
+def cubic_spline(x, y):
+    """
+    Natural cubic spline interpolation.
+    Implements the algorithm as described in Burden.
+    """
     n = len(x) - 1
-    h = np.diff(x)  # h[j] = x[j+1] - x[j]
     
-    # Set up the tridiagonal system for c coefficients (equation 3.21)
-    A = np.zeros((n+1, n+1))
-    b = np.zeros(n+1)
+    # Step 1: Calculate h
+    h = np.diff(x)
     
-    # Interior points (j = 1 to n-1)
-    for j in range(1, n):
-        A[j, j-1] = h[j-1]
-        A[j, j] = 2 * (h[j-1] + h[j])
-        A[j, j+1] = h[j]
-        b[j] = 3 * ((y[j+1] - y[j])/h[j] - (y[j] - y[j-1])/h[j-1])
+    # Step 2: Calculate alpha
+    alpha = np.zeros(n+1)
+    for i in range(1, n):
+        alpha[i] = 3/h[i]*(y[i+1] - y[i]) - 3/h[i-1]*(y[i] - y[i-1])
     
-    # Boundary conditions
-    if bc_type == 'natural':
-        # Second derivatives = 0 at endpoints
-        A[0, 0] = 1
-        A[-1, -1] = 1
-        b[0] = 0
-        b[-1] = 0
-    elif bc_type == 'clamped':
-        # First derivatives specified at endpoints
-        A[0, 0] = 2*h[0]
-        A[0, 1] = h[0]
-        A[-1, -1] = 2*h[-1]
-        A[-1, -2] = h[-1]
+    # Step 3: Initialize diagonal, mu, and z
+    diagonal = np.zeros(n+1)
+    mu = np.zeros(n+1)
+    z = np.zeros(n+1)
+    diagonal[0] = 1
+    
+    # Step 4: Calculate diagonal, mu, z
+    for i in range(1, n):
+        diagonal[i] = 2*(x[i+1] - x[i-1]) - h[i-1]*mu[i-1]
+        mu[i] = h[i]/diagonal[i]
+        z[i] = (alpha[i] - h[i-1]*z[i-1])/diagonal[i]
+    
+    # Step 5: Set final values
+    diagonal[n] = 1
+    z[n] = 0
+    c = np.zeros(n+1)
+    
+    # Step 6: Back substitution
+    for j in range(n-1, -1, -1):
+        c[j] = z[j] - mu[j]*c[j+1]
         
-        # For demonstration, using f'(a)=0 and f'(b)=0
-        f_prime_a = 0
-        f_prime_b = 0
-        b[0] = 3*((y[1] - y[0])/h[0] - f_prime_a)
-        b[-1] = 3*(f_prime_b - (y[-1] - y[-2])/h[-1])
-    
-    # Solve for c coefficients
-    c = np.linalg.solve(A, b)
-    
-    # Calculate b coefficients using equation (3.20)
+    # Calculate b and d
     b = np.zeros(n)
-    for j in range(n):
-        b[j] = (y[j+1] - y[j])/h[j] - h[j]*(2*c[j] + c[j+1])/3
-    
-    # Calculate d coefficients using equation (3.17)
     d = np.zeros(n)
     for j in range(n):
+        b[j] = (y[j+1] - y[j])/h[j] - h[j]*(c[j+1] + 2*c[j])/3
         d[j] = (c[j+1] - c[j])/(3*h[j])
     
     return {
