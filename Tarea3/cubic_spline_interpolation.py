@@ -76,3 +76,37 @@ def evaluate_spline(x_eval, x, coeffs):
                     coeffs['d'][idx] * dx**3)
     
     return result
+
+def cubic_spline_derivative(coeffs):
+    """
+    Calculate coefficients for the derivative of a cubic spline.
+    The derivative of a cubic polynomial ax^3 + bx^2 + cx + d
+    is 3ax^2 + 2bx + c
+    """
+    return {
+        'a': coeffs['b'],                  # New constant term
+        'b': 2 * coeffs['c'],             # New linear term
+        'c': 3 * coeffs['d'],             # New quadratic term
+        'd': np.zeros_like(coeffs['d'])    # Cubic term becomes zero
+    }
+
+def evaluate_spline_derivative(x_eval, x, coeffs):
+    """
+    Evaluate the derivative of the cubic spline at given points.
+    """
+    result = np.zeros_like(x_eval, dtype=float)
+    
+    for i, xi in enumerate(x_eval):
+        # Find the appropriate interval
+        idx = np.searchsorted(x, xi) - 1
+        idx = max(0, min(idx, len(x)-2))
+        
+        # Calculate the difference
+        dx = xi - x[idx]
+        
+        # Evaluate the derivative polynomial
+        result[i] = (coeffs['a'][idx] + 
+                    coeffs['b'][idx] * dx +
+                    coeffs['c'][idx] * dx**2)
+    
+    return result
