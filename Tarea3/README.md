@@ -8,6 +8,7 @@ Este proyecto implementa un sistema de análisis y visualización de datos que p
 - NumPy
 - Matplotlib
 - Pandas
+- SciPy (utilizado solo para probar nuestra implementación de interpolación spline cúbica)
 
 ## Formato de Datos de Entrada
 - Archivo CSV con N+1 filas y M+1 columnas
@@ -43,8 +44,19 @@ Los archivos de salida se guardan como `{nombre_columna}_n.png` donde:
 - n: Número de intervalos utilizados
 
 ## Pruebas
-- Pruebas unitarias para la interpolación spline cúbica
+- Pruebas unitarias para la interpolación spline cúbica que comparan nuestra implementación con la biblioteca SciPy:
+  - Prueba de interpolación polinomial cúbica
+  - Prueba de interpolación sinusoidal
+  - Prueba de condiciones de frontera
+  - Prueba de puntos de interpolación
+- Las pruebas utilizan la implementación de `CubicSpline` de SciPy como referencia para validar la precisión numérica de nuestra propia implementación
 - Manejo de errores para operaciones de archivo de entrada
+
+### Ejecutar Pruebas
+
+```bash
+python test.py
+```
 
 ## Manejo de Errores
 - Validación de existencia de archivos
