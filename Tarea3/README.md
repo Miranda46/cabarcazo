@@ -4,18 +4,24 @@
 Este proyecto implementa un sistema de análisis y visualización de datos que procesa datos experimentales utilizando interpolación mediante splines cúbicos naturales.
 
 ## Requisitos
-- Python 3.x
+- Python
 - NumPy
 - Matplotlib
 - Pandas
-- SciPy (utilizado solo para probar nuestra implementación de interpolación spline cúbica)
+- SciPy
+- pytest
+
+Para instalar todas las dependencias:
+```bash
+pip install numpy matplotlib pandas scipy pytest
+```
 
 ## Formato de Datos de Entrada
-- Archivo CSV con N+1 filas y M+1 columnas
-- Primera fila contiene los encabezados de las columnas
-- Primera columna representa coordenadas x
-- Columnas subsiguientes representan coordenadas y para diferentes experimentos
-- Valores separados por punto y coma
+- Archivo data.csv con N+1 filas y M+1 columnas
+- Primera fila contiene los nombres de M experimentos
+- Primera columna representa coordenadas "x"
+- Columnas subsiguientes representan coordenadas "y" para diferentes experimentos
+- Valores separados por punto y coma ( ; )
 
 ## Detalles de Implementación
 
@@ -68,9 +74,19 @@ Los archivos de salida se guardan como `{nombre_columna}_n.png` donde:
 python test.py
 ```
 
-## Manejo de Errores
-- Validación de existencia de archivos
-- Verificación de formato de datos
-- Manejo de errores de cálculos numéricos
-
 ## Uso
+1. Prepare sus datos en formato CSV con el formato especificado (ver sección "Formato de Datos de Entrada")
+
+2. Ejecute el programa:
+
+3. El programa generará:
+
+- Gráficos individuales para cada columna de datos con nombre {columna}_n{numero}.png
+- Un gráfico de cuadrícula comparativo grid_visualization.png
+
+4. Interpretación de los gráficos:
+
+- Puntos grises: datos originales
+- Puntos rojos: puntos medios de intervalos
+- Línea verde: curva de interpolación spline
+- Línea roja punteada: derivada de la curva (eje secundario)
