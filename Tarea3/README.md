@@ -17,7 +17,8 @@ pip install numpy matplotlib pandas scipy pytest
 ```
 
 ## Formato de Datos de Entrada
-- Archivo data.csv con N+1 filas y M+1 columnas
+- Archivo con datos en formato csv con N+1 filas y M+1 columnas
+- Llamarlo desde consola con main.py, usando -i para dar el nombre del archivo (e.g python main.py -i data.csv)
 - Primera fila contiene los nombres de M experimentos
 - Primera columna representa coordenadas "x"
 - Columnas subsiguientes representan coordenadas "y" para diferentes experimentos
@@ -26,7 +27,7 @@ pip install numpy matplotlib pandas scipy pytest
 ## Detalles de Implementación
 
 ### Procesamiento de Datos
-1. Leer archivo CSV de entrada
+1. Leer archivo CSV que se dio como input de entrada
 2. Dividir el rango de coordenadas x en n intervalos iguales
 3. Realizar regresión lineal para cada intervalo
 4. Calcular puntos medios de las líneas de regresión

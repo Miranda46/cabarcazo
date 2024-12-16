@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -197,9 +198,15 @@ def create_grid_visualization(df, n_range=(6, 11)):
     plt.close()
 
 def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description="main")
+    parser.add_argument(
+        "-i", "--input", type=str, required=True, help="CSV file")
+    args = parser.parse_args()
     try:
         # Read data
-        df = read_data('data.csv')
+        data_str = args.input
+        df = read_data(data_str)
         x = df.iloc[:, 0].values
         
         # Validate minimum number of rows
