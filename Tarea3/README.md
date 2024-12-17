@@ -80,6 +80,10 @@ python test.py
 
 2. Ejecute el programa:
 
+```bash
+python main.py -i data.csv
+```
+
 3. El programa generará:
 
 - Gráficos individuales para cada columna de datos con nombre {columna}_n{numero}.png

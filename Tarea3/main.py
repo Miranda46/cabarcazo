@@ -6,13 +6,28 @@ from cubic_spline_interpolation import cubic_spline, evaluate_spline, cubic_spli
 
 def read_data(filepath):
     """Read and validate CSV data."""
+    # Validate file extension
+    if not filepath.lower().endswith('.csv'):
+        raise ValueError("File must be a CSV file with .csv extension")
+
     try:
+        with open(filepath, 'r') as f:
+            first_lines = [next(f) for _ in range(2)]
+            
+        if not first_lines:
+            raise ValueError("CSV file is empty")
+            
+        if not all(';' in line for line in first_lines):
+            raise ValueError("Invalid CSV format. File must use semicolon (;) as separator")
+
         df = pd.read_csv(filepath, sep=';')
         if len(df.columns) < 2:
             raise ValueError("File must have at least 2 columns")
         return df
     except FileNotFoundError:
         raise FileNotFoundError(f"File {filepath} not found")
+    except pd.errors.EmptyDataError:
+        raise ValueError("CSV file is empty")
     except Exception as e:
         raise ValueError(f"Error reading file: {str(e)}")
 
